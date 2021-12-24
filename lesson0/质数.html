@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+获取一个数字内的所有质数(素数)?
+<pre>
+    <code>
+        function primeNumber(num) {
+	    let res = []
+
+	    if (num <= 1) {
+			return []
+        }
+		if (num === 2) {
+			return [2]
+        }
+		if (num === 3) {
+			return [2, 3]
+        }
+        for (let i = 2; i <= num; i++ ) {
+			let flag = true
+			for (let j = 2; j <= Math.sqrt(num); j++) {
+				if (i % j === 0) {
+					flag = false
+                    break
+                }
+            }
+			if (flag) {
+				res.push(i)
+			}
+        }
+		return res;
+    }
+
+    console.log(primeNumber(20));
+
+
+	function isPrimeNumber(num) {
+        if ([2, 3].includes(num)) {
+			return true
+        }
+		let flag = true
+        for (let i = 2; i <= Math.sqrt(num); i++) {
+			if (num % i === 0) {
+				flag = false
+                break
+            }
+        }
+		return flag
+    }
+
+    console.log(isPrimeNumber(7));
+    console.log(isPrimeNumber(14));
+    </code>
+</pre>
+<script>
+    function primeNumber(num) {
+	    let res = []
+
+	    if (num <= 1) {
+			return []
+        }
+		if (num === 2) {
+			return [2]
+        }
+		if (num === 3) {
+			return [2, 3]
+        }
+        for (let i = 2; i <= num; i++ ) {
+			let flag = true
+			for (let j = 2; j <= Math.sqrt(num); j++) {
+				if (i % j === 0) {
+					flag = false
+                    break
+                }
+            }
+			if (flag) {
+				res.push(i)
+			}
+        }
+		return res;
+    }
+
+    console.log(primeNumber(20));
+
+
+	function isPrimeNumber(num) {
+        if ([2, 3].includes(num)) {
+			return true
+        }
+		let flag = true
+        for (let i = 2; i <= Math.sqrt(num); i++) {
+			if (num % i === 0) {
+				flag = false
+                break
+            }
+        }
+		return flag
+    }
+
+    console.log(isPrimeNumber(7));
+    console.log(isPrimeNumber(14));
+</script>
+</body>
+</html>

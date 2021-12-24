@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+	class Node {
+		constructor(key) {
+			this.left = null
+			this.key = key
+			this.right = null
+		}
+	}
+
+	class BinarySearchTree {
+		constructor() {
+			this.root = null
+		}
+		insert(key) {
+			// 1. 生成新节点
+			let node = new Node(key)
+			// 2. 判断是否有 root
+			if (this.root) {
+				// 2.1 node 与 root 比较, 看看插入到哪里合适
+				this._insertNode(this.root, node)
+			}else {
+				// 2.2 更新 root
+				this.root = node
+			}
+
+		}
+		_insertNode(parentNode, node) {
+			if (node.key > parentNode.key ) { // 放右边
+				if (parentNode.right) {
+					this._insertNode(parentNode.right, node)
+				}else {
+					parentNode.right = node
+				}
+			}else { // 放左边
+				if (parentNode.left) {
+					this._insertNode(parentNode.left, node)
+				}else {
+					parentNode.left = node
+				}
+			}
+		}
+
+		// 删除节点
+		remove(key) {
+			debugger
+			// 0. 找到这个 key
+			const {node, parentNode, isLeft} = this._getKeyInfo(key)
+			if (!node) { // 不存在这个key
+				return null
+			}
+			// 1. 度为0 的节点
+			if (!(node.left || node.right)) {
+				if (!parentNode) {
+					this.root = null
+				}else {
+					isLeft ? parentNode.left = null : parentNode.right = null
+				}
+				return key
+			}
+			// 只有一个子节点
+			if (node.left && !node.right) {
+				if (!parentNode) {
+					this.root = node.left
+				}else {
+					isLeft ? parentNode.left = node.left : parentNode.right = node.left
+				}
+				return key
+			}
+			if (!node.left && node.right) {
+				if (!parentNode) {
+					this.root = node.right
+				}else {
+					isLeft ? parentNode.left = node.right : parentNode.right = node.right
+				}
+				return key
+			}
+			// 2. 当子节点 有左右节点时
+            let {preNode} = this._getPreNode(node)
+            // 2.1 如果
+            if (node === this.root) {
+                this.root = preNode
+            }else {
+				isLeft ? parentNode.left = preNode : parentNode.right = preNode
+            }
+			preNode.right = node.right
+
+
+			// 2. 当子节点 有左右节点时;
+			// !!! 要将左侧子树的最大值 或者右侧子树的最小值 替代当前node (可以画图  左侧都比 node小, 右侧都比node搭)
+			// 使用 前驱 or 后继; 这里使用前驱
+			// let newNode = node.left
+			// let targetNode = null
+			// while (newNode) {
+			// 	targetNode = newNode
+			// 	newNode = newNode.right
+			// }
+			// let {node: tempNode, parentNode: tempParentNode} = this._getKeyInfo(targetNode.key, node)
+			// if (!parentNode) {
+			// 	this.root = tempNode
+			// 	this.root.left = node.left
+			// 	this.root.right = node.right
+			// 	tempParentNode.right = null
+			// }else {
+			// 	isLeft ? parentNode.left = tempNode : parentNode.right = tempNode
+            //     debugger
+            //     // tempNode 的left 如果之前有, 就将node.left 放到这个left之后
+            //     // tempNode 的 left 如果之前就没有,就将node.left 作为这个left (但是需要确保 tempNode !== node.left)
+            //     if (tempParentNode !== node) {
+	        //         if (tempNode.left) {
+		    //             let leftEndNode = null
+		    //             let temp = tempNode.left
+		    //             while(temp) {
+			//                 leftEndNode = temp
+			//                 temp = temp.left
+		    //             }
+		    //             leftEndNode.left = node.left
+	        //         }else {
+		    //             tempNode.left = node.left
+	        //         }
+            //     }
+            //
+			// 	tempNode.right = node.right
+			// 	tempParentNode.right = null
+			// }
+			return key
+		}
+		_getPreNode(delNode) { // 获取前驱节点
+			// 返回前驱节点的 父节点
+            let node = delNode.left
+            let preParentNode = null
+            let preNode = delNode
+            while(node) {
+	            preParentNode = preNode
+				preNode = node
+				node = node.right
+            }
+			if (preNode !== delNode.left) {
+				preParentNode.right = preNode.left
+                preNode.left = delNode.left
+            }
+
+			return {
+				preParentNode, // 前继节点的父节点
+				preNode // 前继节点
+            }
+        }
+		// 获取 key & key-parent Info
+		_getKeyInfo(key, node = this.root) {
+			if (!node) {
+				return null
+			}
+			let parentNode = null
+			while(node) {
+				if (key > node.key) {
+					parentNode = node
+					node = node.right
+				}else if (key < node.key) {
+					parentNode = node
+					node = node.left
+				}else if (key === node.key) {
+					return {
+						node,
+						parentNode,
+						isLeft: parentNode ? parentNode.key > key : false
+					}
+				}
+			}
+			return {
+				node: null,
+				parentNode: null,
+				isLeft: null
+			}
+		}
+
+		// 先序遍历
+		preOrderTraversal() {
+			return this._preOrderTraversalHandler(this.root)
+		}
+		_preOrderTraversalHandler(node) {
+			if (node) {
+				// 先遍历左边
+				return [node.key].concat(this._preOrderTraversalHandler(node.left) , this._preOrderTraversalHandler(node.right))
+			}
+			return []
+		}
+
+		// 中序遍历
+		midOrderTraversal() {
+			return this._midOrderTraversalHandler(this.root)
+		}
+		_midOrderTraversalHandler(node) {
+			if (node) {
+				// 先遍历左边
+				return this._midOrderTraversalHandler(node.left).concat([node.key], this._midOrderTraversalHandler(node.right))
+			}
+			return []
+		}
+		// 后序遍历
+		postOrderTraversal() {
+			return this._postOrderTraversalHandler(this.root)
+		}
+		_postOrderTraversalHandler(node) {
+			if (node) {
+				// 先遍历左边
+				return this._postOrderTraversalHandler(node.left).concat(this._postOrderTraversalHandler(node.right), [node.key])
+			}
+			return []
+		}
+
+		// 最大值 --> 右侧层级最深的那个
+		max(node = this.root) {
+			let res = null
+			if (!node) {
+				return res
+			}
+			res = node
+			while(res && res.right){
+				res = res.right
+			}
+			return res.key
+		}
+		// 最小值 --> 左侧层级最深的那个
+		min() {
+			let res = null
+			if (!this.root) {
+				return res
+			}
+			res = this.root
+			while(res && res.left){
+				res = res.left
+			}
+			return res.key
+		}
+		// 查找是否存在某个值
+		isExist(key, node = this.root) {
+			if (!node) {
+				return false
+			}
+			if (key > node.key) {
+				return this.isExist(key, node.right)
+			}else if (key < node.key) {
+				return this.isExist(key, node.left)
+			}else if (key === node.key){
+				return true
+			}
+		}
+	}
+
+	let bst = new BinarySearchTree()
+	bst.insert(11)
+	bst.insert(7)
+	bst.insert(15)
+	bst.insert(5)
+	bst.insert(3)
+	bst.insert(9)
+	bst.insert(8)
+	bst.insert(10)
+	bst.insert(13)
+	bst.insert(12)
+	bst.insert(14)
+	bst.insert(20)
+	bst.insert(18)
+	bst.insert(25)
+
+	bst.insert(6)
+	bst.insert(16)
+	bst.insert(19)
+	bst.insert(30)
+	bst.insert(21)
+	bst.insert(24)
+	bst.insert(23)
+	bst.insert(22)
+	console.log(JSON.stringify(bst));
+	// bst.remove(15)
+	// bst.remove(11)
+	bst.remove(25)
+	console.log(JSON.stringify(bst));
+
+</script>
+</body>
+</html>

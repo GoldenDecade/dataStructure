@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+// 先进后出  后出(pop)
+pop peek push isEmpty size toString
+<pre>
+    <code>
+class Stack {
+	constructor() {
+        this.stack = []
+	}
+	push(val) {
+		return this.stack.push(val)
+    }
+	pop() {
+		return this.stack.pop(val)
+    }
+	peek() {
+		return this.stack[this.stack.length - 1]
+    }
+	isEmpty() {
+		return this.stack.length === 0
+    }
+	size() {
+		return this.stack.length
+    }
+	toString() {
+		// return this.stack.toString()
+        let str = ''
+        let i = 0
+        while(i < this.stack.length) {
+			str += this.stack[i]
+            i++
+        }
+		return str
+    }
+}
+const stack = new Stack()
+stack.push(1)
+stack.push(2)
+stack.push(3)
+console.log(stack.toString());
+    </code>
+</pre>
+
+
+<script>
+class Stack {
+	constructor() {
+        this.stack = []
+	}
+	push(val) {
+		this.stack.push(val)
+    }
+	pop() {
+		return this.stack.pop(val)
+    }
+	peek() {
+		return this.stack[this.stack.length - 1]
+    }
+	isEmpty() {
+		return this.stack.length === 0
+    }
+	size() {
+		return this.stack.length
+    }
+	toString() {
+		// return this.stack.toString()
+        let str = ''
+        let i = 0
+        while(i < this.stack.length) {
+			str += this.stack[i]
+            i++
+        }
+		return str
+    }
+}
+const stack = new Stack()
+stack.push(1)
+stack.push(2)
+stack.push(3)
+console.log(stack.toString());
+</script>
+</body>
+</html>

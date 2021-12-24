@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<pre>
+    <code>
+        // 只是简单实现下   可以用数组  可以用对象
+// 集合: 一组 无序的  不可重复 的元素
+// 只是简单实现下   可以用数组  可以用对象
+// 集合: 一组 无序的  不可重复 的元素
+class Set {
+	constructor() {
+		this.items = {}
+	}
+	add(val) {
+		if (this.items[val]) {
+			return false
+		}
+		this.items[val] = val
+		return this.items
+	}
+	remove(val) {
+		delete this.items[val]
+	}
+	has(val) {
+		return this.items.hasOwnProperty(val)
+	}
+	clear() {
+		this.items = {}
+	}
+	size() {
+		return Object.keys(this.items).length
+	}
+	values() {
+		return Object.keys(this.items)
+	}
+	keys() {
+		return Object.keys(this.items)
+	}
+
+	// 并集
+	union(otherSet) {
+		let newSet = new Set()
+		for (let i = 0; i < this.values.length; i++) {
+			newSet.add(this.values[i])
+		}
+		for (let i = 0; i < otherSet.values.length; i++) {
+			newSet.add(otherSet.values[i])
+		}
+		return newSet
+	}
+	// 交集
+	intersection(otherSet) {
+		let newSet = new Set()
+		for (let i = 0; i < this.values.length; i++) {
+			if (otherSet.has(this.values[i])) {
+				newSet.add(this.values[i])
+			}
+		}
+		return newSet
+	}
+	// 差集
+	difference(otherSet) {
+		let newSet = new Set()
+		for (let i = 0; i < this.values.length; i++) {
+			if(!otherSet.has(this.values[i])) {
+				newSet.add(this.values[i])
+			}
+		}
+		return otherSet
+	}
+	subset(otherSet) {
+		for (let i = 0; i < otherSet.values.length; i++) {
+			if (!this.has(otherSet.values)) {
+				return false
+			}
+		}
+		return true
+	}
+}
+    </code>
+</pre>
+<script>
+	// 只是简单实现下   可以用数组  可以用对象
+	// 集合: 一组 无序的  不可重复 的元素
+	// 只是简单实现下   可以用数组  可以用对象
+	// 集合: 一组 无序的  不可重复 的元素
+	class Set {
+		constructor() {
+			this.items = {}
+		}
+		add(val) {
+			if (this.items[val]) {
+				return false
+			}
+			this.items[val] = val
+			return this.items
+		}
+		remove(val) {
+			delete this.items[val]
+		}
+		has(val) {
+			return this.items.hasOwnProperty(val)
+		}
+		clear() {
+			this.items = {}
+		}
+		size() {
+			return Object.keys(this.items).length
+		}
+		values() {
+			return Object.keys(this.items)
+		}
+		keys() {
+			return Object.keys(this.items)
+		}
+
+		// 并集
+		union(otherSet) {
+			let newSet = new Set()
+			for (let i = 0; i < this.values.length; i++) {
+				newSet.add(this.values[i])
+			}
+			for (let i = 0; i < otherSet.values.length; i++) {
+				newSet.add(otherSet.values[i])
+			}
+			return newSet
+		}
+		// 交集
+		intersection(otherSet) {
+			let newSet = new Set()
+			for (let i = 0; i < this.values.length; i++) {
+				if (otherSet.has(this.values[i])) {
+					newSet.add(this.values[i])
+				}
+			}
+			return newSet
+		}
+		// 差集
+		difference(otherSet) {
+			let newSet = new Set()
+			for (let i = 0; i < this.values.length; i++) {
+				if(!otherSet.has(this.values[i])) {
+					newSet.add(this.values[i])
+				}
+			}
+			return otherSet
+		}
+		subset(otherSet) {
+			for (let i = 0; i < otherSet.values.length; i++) {
+				if (!this.has(otherSet.values)) {
+					return false
+				}
+			}
+			return true
+		}
+	}
+
+	let setVal1 = new Set()
+	setVal1.append(1)
+	setVal1.append(2)
+	setVal1.append(3)
+	setVal1.append(4)
+
+	let setVal2 = new Set()
+	setVal2.append(2)
+	setVal2.append(4)
+	setVal2.append(5)
+
+	let subVal = new Set()
+	subVal.append(2)
+	subVal.append(3)
+
+
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+	class Stack {
+		constructor() {
+			this.stack = []
+		}
+		push(val) {
+			this.stack.push(val)
+		}
+		pop() {
+			return this.stack.pop()
+		}
+		peek() {
+			return this.stack[this.stack.length - 1]
+		}
+		isEmpty() {
+			return this.stack.length === 0
+		}
+		size() {
+			return this.stack.length
+		}
+		toString() {
+			// return this.stack.toString()
+			let str = ''
+			let i = 0
+			while(i < this.stack.length) {
+				str += this.stack[i]
+				i++
+			}
+			return str
+		}
+	}
+
+
+    function DecimalToBinary(decimal) {
+		// let res = []
+		// while(decimal > 0) {
+        //     res.unshift(decimal % 2)
+		// 	decimal = parseInt(decimal / 2)
+        // }
+		// return res.join('')
+        let binaryStr = ''
+        let stack = new Stack()
+        while(decimal > 0) {
+			stack.push(decimal % 2)
+            decimal = Math.floor(decimal / 2)
+        }
+		while(!stack.isEmpty()) {
+			binaryStr += stack.pop()
+        }
+		return binaryStr
+    }
+
+    console.log(DecimalToBinary(100));
+
+
+	function BinaryToDecimal(binary) {
+
+    }
+</script>
+</body>
+</html>

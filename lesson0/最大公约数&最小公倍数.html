@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        pre {
+            float: left;
+        }
+    </style>
+</head>
+<body>
+<p>最大公约数 & 最小公倍数</p>
+<pre>
+    <code>
+例如，求（319，377）：
+∵ 319÷377=0（余319）
+∴（319，377）=（377，319）；
+∵ 377÷319=1（余58）
+∴（377，319）=（319，58）；
+∵ 319÷58=5（余29）
+∴ （319，58）=（58，29）；
+∵ 58÷29=2（余0）
+∴ （58，29）= 29；
+∴ （319，377）=29。
+        最后的最大公约数就是 29
+    </code>
+</pre>
+-------------
+<pre>
+    <code>
+         // 最大公约数 ---- 辗转相除法
+    function maxYue(num1, num2) {
+		let max = Math.max(num1, num2)
+        let min = Math.min(num1, num2)
+		if (max % min !== 0) {
+			return maxYue(min, max % min)
+        }else {
+			return min
+        }
+    }
+
+    console.log(maxYue(24, 16)); // 8
+    console.log(maxYue(319, 377)); // 29
+    </code>
+</pre>
+<pre>
+    <code>
+         // 最小公倍数: 两个数的乘积 / 两个数的最大公约数
+    function minBei(num1, num2) {
+		return num1 * num2 / maxYue(num1, num2)
+    }
+
+    console.log(minBei(24, 16));
+    </code>
+</pre>
+<script>
+    // 最大公约数 ---- 辗转相除法
+    function maxYue(num1, num2) {
+		let max = Math.max(num1, num2)
+        let min = Math.min(num1, num2)
+		if (max % min !== 0) {
+			return maxYue(min, max % min)
+        }else {
+			return min
+        }
+    }
+
+    console.log(maxYue(24, 16)); // 8
+    console.log(maxYue(319, 377)); // 29
+
+
+    // 最小公倍数: 两个数的乘积 / 两个数的最大公约数
+    function minBei(num1, num2) {
+		return num1 * num2 / maxYue(num1, num2)
+    }
+
+    console.log(minBei(24, 16));
+</script>
+</body>
+</html>

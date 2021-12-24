@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>击鼓传花</title>
+</head>
+<body>
+<pre>
+    <code>
+     击鼓传花
+    // 几个朋友一起玩, 围成一圈, 开始数数  数到特殊数字时淘汰  最后留下的那个人 获胜;
+    // 最后留下的是第几个人?
+    // 最重要的是思维: 如何考虑这个问题   队列形式  到特殊位置淘汰 重新循环
+    function passGame(personNum, specialNum) {
+	    let queue = new Queue()
+	    for (let i = 1; i <= personNum; i++) {
+		    queue.enqueue(i)
+	    }
+
+	    while(queue.size() > 1) {
+		    for (let i = 0; i < specialNum - 1; i++) {
+			    queue.enqueue(queue.front())
+			    queue.dequeue()
+		    }
+		    queue.dequeue()
+	    }
+	    return queue.front()
+    }
+
+    console.log(passGame(4,7));
+    console.log(passGame(5,3));
+    </code>
+</pre>
+</body>
+</html>

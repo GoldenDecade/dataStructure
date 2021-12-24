@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script>
+	class ArrayList {
+		constructor() {
+			this.array = []
+		}
+
+		insert(item) {
+			this.array.push(item)
+		}
+
+		toString() {
+			return this.array.join(' - ')
+		}
+
+		// 冒泡排序
+		// 交换次数 (n-1) + (n-2) + (n -3) + ... + 1 = (n - 1) * n / 2; (n2 - n) / 2; 最终 O(n2)
+		// 比较次数 最大值等于交换次数  最小值为0  平均值 (n2 - n) / 2; 最终 O(n2)
+		// 1. 一次循环找出最大的,放到末尾
+		// 2. 循环个数减 1, 将次大的放到 倒数第二
+		bubbleSort() {
+			const arr = this.array
+			const length = arr.length
+			for (let i = length - 1; i >= 0; i--) {
+				for (let j = 0; j < i; j++) {
+					if (arr[j] > arr[j + 1]) {
+						[arr[j], arr[j + 1]] = [arr[j + 1], arr[j]]
+					}
+				}
+			}
+		}
+
+		// 选择排序
+		// 交换次数 n次 O(n)
+		// 比较次数 平均值 (n2 - n) / 2; 最终 O(n2)
+		// 1. 从第 0 位置开始, 选出最小的 index; 将其与 0位置进行置换
+		// 2. 从第 1 位置开始, 选出最小的 index; 将其与 1位置进行置换
+		// 3. 依次轮推
+		selectSort() {
+			const arr = this.array
+			const length = arr.length
+
+			for (let i = 0; i < length - 1; i++) {
+				let minIndex = i
+				for (let j = i + 1; j < length; j++) {
+					// 找出最小值的索引
+					if (arr[minIndex] > arr[j]) {
+						minIndex = j
+					}
+				}
+				[arr[i], arr[minIndex]] = [arr[minIndex], arr[i]]
+			}
+		}
+
+		// 插入排序
+        // 认为局部
+		insertSort() {
+			const arr = this.array
+			const length = arr.length
+
+			for (let i = 0; i < length - 1; i++) {
+				for (let j = 0; j <= i; j++) {
+					if (arr[i + 1] < arr[j]) {
+						arr.splice(j, 0, arr[i + 1])
+						arr.splice(i + 2, 1)
+						break
+					}
+				}
+			}
+		}
+		insertSort1() {
+			const arr = this.array
+			const length = arr.length
+            for (let i = 1; i < length; i++) {
+				const temp = arr[i]
+                let j = i
+                while(j > 0 && arr[j - 1] > temp) {
+					arr[j] = arr[j - 1]
+					j--
+                }
+				arr[j] = temp
+            }
+        }
+		// 希尔排序
+        // example: arr = [9, 3, 5, 11, 8, 7, 10, 23, 14, 19, 15, 1, 21]
+        // 1. 先以 N/2 作为间隔, 比如 arr.length 13, 则间隔为 6; 对索引为(0, 6, 12) 的进行 [插入排序]
+        // 1.1 得出 [9,3,5,11,1,7,10,23,14,19,15,8,21]
+        // 2. 再以 N/4 作为间隔, 间隔为3
+        // 2.1 得出 [1,3,5,8,    9,7,10,11,    14,19,15,23,   21]
+        // 3. 再以 N/8 作为间隔, 间隔为 1
+        // 3.1 此时使用  [插入排序] insertSort
+		shellSort() {
+			const arr = this.array
+			const length = arr.length
+            let gap = Math.floor(length / 2)
+            while(gap >= 1) {
+	            console.log(gap);
+	            for (let i = gap; i < length; i++) {
+					const temp = arr[i]
+                    let j = i
+					while(j > 0 && (temp < arr[j - gap])) {
+						arr[j] = arr[j - gap]
+                        j -= gap
+                    }
+					arr[j] = temp
+                }
+	            console.log(JSON.stringify(arr));
+	            gap = Math.floor(gap / 2)
+            }
+        }
+        // median: 中位数
+		median(left, right) {
+			// 头 尾 中 三个数进行比较, 按照大小进行排序
+            // 将 中位数 和 倒数第二个位置的数 进行交换, 因为最后一个数 肯定是大于中位数的,这样减少对比
+            // 返回 中位数
+            let arr = this.array
+            const middle = Math.floor((left + right) / 2)
+			if(arr[left] > arr[right]) {
+				[arr[left], arr[right]] = [arr[right], arr[left]]
+			}
+			if (arr[left] > arr[middle]) {
+				[arr[left], arr[middle]] = [arr[middle], arr[left]]
+			}
+			if (arr[middle] > arr[right]) {
+				[arr[middle], arr[right]] = [arr[right], arr[middle]]
+			}
+
+			// 中位数 和 倒数第二个位置的数 进行交换
+			[arr[middle], arr[right - 1]] = [arr[right - 1], arr[middle]]
+            return arr[right - 1]
+        }
+
+		// 快速排序:  寻找基数 & 二分法
+		quickSort() {
+			const arr = this.array
+			const length = arr.length
+            this.quick(0, length - 1)
+        }
+		quick(left, right) {
+			if (left >= right) {
+				return
+            }
+			const median = this.median(left, right) // 中位数的位置此时是 right - 1
+			let i = left
+            let j = right - 1
+
+            while(true) {
+	            while(i++ && this.array[i] < median) {
+
+	            }
+	            while(j-- && this.array[j] > median) {
+
+	            }
+	            if (i < j) {
+		            // 交换位置
+		            [this.array[i], this.array[j]] = [this.array[j], this.array[i]]
+	            }else if (i > j) {
+		            // 将 i 位置元素与 中位数进行交换; 从而使得 中位数左边都小于自身, 右边都大于自身
+		            [this.array[i], this.array[right - 1]] = [this.array[right - 1], this.array[i]]
+		            break
+	            }
+            }
+			// 左边
+            this.quick(left, i - 1)
+            // 右边
+            this.quick(i + 1, right)
+        }
+
+	}
+
+	var list = new ArrayList()
+	list.insert(3)
+	list.insert(6)
+	list.insert(4)
+	list.insert(11)
+	list.insert(2)
+	// list.insert(10)
+	// list.insert(5)
+	// alert(list) // 3,6,4,2,11,10,5
+	// console.log(list);
+	// list.bubbleSort()
+    // list.selectSort()
+	// list.insertSort()
+	// list.insertSort1()
+    // list.shellSort()
+    list.quickSort()
+	console.log(list);
+</script>
+</body>
+</html>

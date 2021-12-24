@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+// 哈希化 -- 霍纳法则--> 多项式   ()
+<pre>
+    <code>
+        class HashTable {
+		constructor() {
+			this.storage = [] // 哈希表
+			this.count = 0 // 哈希表中的数据量
+			this.minLength = 7 // 哈希表的最小长度
+			this.limit = this.minLength // 哈希表的长度
+		}
+		put(key, val) {
+			// 1. 计算出 hashCode
+			const index = HashTable.hashFunc(key, this.limit)
+			console.log(`${this.limit} -- ${index}`);
+			let arr = this.storage[index]
+			// 2. 添加到 对应索引的 bucket
+			if (!arr) {
+				this.storage[index] = [[key, val]]
+			}else {
+				// 我们知道数组中元素的数据类型都一般是相同的（any[] 类型的数组可以不同），如果存储的元素数据类型不同，则需要使用元组。
+				// 如果已经存在这个key, 就更新 val
+				const i = arr.findIndex(item => item[0] === key)
+				if (~i) {
+					arr[i] = [key, val]
+				}else {
+					arr.push([key, val]) // tuple 元组
+				}
+			}
+			this.count++
+			// 扩容
+			if (this.count / this.limit > 0.75) {
+				let newLimit = HashTable.getPrime(this.limit * 2)
+				this._resize(newLimit)
+			}
+		}
+		remove(key) {
+			// 1. 计算出 index
+			const index = HashTable.hashFunc(key, this.limit)
+			// 2. 找到这个 key
+			let arr = this.storage[index]
+			if (!arr) {
+				return null
+			}else {
+				// 我们知道数组中元素的数据类型都一般是相同的（any[] 类型的数组可以不同），如果存储的元素数据类型不同，则需要使用元组。
+				// 如果已经存在这个key, 就更新 val
+				const i = arr.findIndex(item => item[0] === key)
+				if (~i) {
+					arr.splice(i, 1)
+				}else { // 不存在
+					return null
+				}
+			}
+			this.count--
+			// 缩容 其实就是缩小 this.limit
+			if (this.count / this.limit < 0.25 && this.limit > this.minLength) {
+				this._resize(HashTable.getPrime(Math.floor(this.limit / 2)))
+			}
+		}
+		_resize(limit) {
+			this.limit = limit
+			this.count = 0
+			let oldStorage = this.storage
+			this.storage = []
+			for (let i = 0; i < oldStorage.length; i++) {
+				const arr = oldStorage[i]
+				if (!arr) {
+					continue
+				}
+				for (let j = 0; j < arr.length; j++) {
+					let tuple = arr[j]
+					this.put(tuple[0], tuple[1])
+				}
+			}
+		}
+		get(key) {
+			// 1. 计算出 index
+			const index = HashTable.hashFunc(key, this.limit)
+			// 2. 找到这个 key
+			let arr = this.storage[index]
+			if (!arr) {
+				return null
+			}else {
+				// 我们知道数组中元素的数据类型都一般是相同的（any[] 类型的数组可以不同），如果存储的元素数据类型不同，则需要使用元组。
+				// 如果已经存在这个key, 就更新 val
+				const i = arr.findIndex(item => item[0] === key)
+				if (~i) {
+					return arr[i][1]
+				}else { // 不存在
+					return null
+				}
+			}
+		}
+		size() {
+			return this.count
+		}
+		isEmpty() {
+			return this.count === 0
+		}
+		static hashFunc(str, size) {
+			// 根据一个字符串 'passion' --> 6
+			const key = 41
+			let hashCode = 0
+			for (let i = 0; i < str.length; i++) {
+				hashCode = key * hashCode + str.charCodeAt(i)
+			}
+			return hashCode % size
+		}
+		static getPrime(num) {
+			if (HashTable.isPrime(num)) {
+				return num
+			}else {
+				while(!HashTable.isPrime(num)) {
+					num++
+				}
+				return num
+			}
+		}
+		static isPrime(num) {
+			if (num < 2) {
+				return false
+			}
+			if (num === 2) {
+				return true
+			}
+			for (let i = 2; i <= Math.sqrt(num); i++) {
+				if (num % i === 0) {
+					return false
+				}
+			}
+			return true
+		}
+	}
+    </code>
+</pre>
+<script>
+	class HashTable {
+		constructor() {
+			this.storage = [] // 哈希表
+			this.count = 0 // 哈希表中的数据量
+			this.minLength = 7 // 哈希表的最小长度
+			this.limit = this.minLength // 哈希表的长度
+		}
+		put(key, val) {
+			// 1. 计算出 hashCode
+			const index = HashTable.hashFunc(key, this.limit)
+			console.log(`${this.limit} -- ${index}`);
+			let arr = this.storage[index]
+			// 2. 添加到 对应索引的 bucket
+			if (!arr) {
+				this.storage[index] = [[key, val]]
+			}else {
+				// 我们知道数组中元素的数据类型都一般是相同的（any[] 类型的数组可以不同），如果存储的元素数据类型不同，则需要使用元组。
+				// 如果已经存在这个key, 就更新 val
+				const i = arr.findIndex(item => item[0] === key)
+				if (~i) {
+					arr[i] = [key, val]
+				}else {
+					arr.push([key, val]) // tuple 元组
+				}
+			}
+			this.count++
+			// 扩容
+			if (this.count / this.limit > 0.75) {
+				let newLimit = HashTable.getPrime(this.limit * 2)
+				this._resize(newLimit)
+			}
+		}
+		remove(key) {
+			// 1. 计算出 index
+			const index = HashTable.hashFunc(key, this.limit)
+			// 2. 找到这个 key
+			let arr = this.storage[index]
+			if (!arr) {
+				return null
+			}else {
+				// 我们知道数组中元素的数据类型都一般是相同的（any[] 类型的数组可以不同），如果存储的元素数据类型不同，则需要使用元组。
+				// 如果已经存在这个key, 就更新 val
+				const i = arr.findIndex(item => item[0] === key)
+				if (~i) {
+					arr.splice(i, 1)
+				}else { // 不存在
+					return null
+				}
+			}
+			this.count--
+			// 缩容 其实就是缩小 this.limit
+			if (this.count / this.limit < 0.25 && this.limit > this.minLength) {
+				this._resize(HashTable.getPrime(Math.floor(this.limit / 2)))
+			}
+		}
+		_resize(limit) {
+			this.limit = limit
+			this.count = 0
+			let oldStorage = this.storage
+			this.storage = []
+			for (let i = 0; i < oldStorage.length; i++) {
+				const arr = oldStorage[i]
+				if (!arr) {
+					continue
+				}
+				for (let j = 0; j < arr.length; j++) {
+					let tuple = arr[j]
+					this.put(tuple[0], tuple[1])
+				}
+			}
+		}
+		get(key) {
+			// 1. 计算出 index
+			const index = HashTable.hashFunc(key, this.limit)
+			// 2. 找到这个 key
+			let arr = this.storage[index]
+			if (!arr) {
+				return null
+			}else {
+				// 我们知道数组中元素的数据类型都一般是相同的（any[] 类型的数组可以不同），如果存储的元素数据类型不同，则需要使用元组。
+				// 如果已经存在这个key, 就更新 val
+				const i = arr.findIndex(item => item[0] === key)
+				if (~i) {
+					return arr[i][1]
+				}else { // 不存在
+					return null
+				}
+			}
+		}
+		size() {
+			return this.count
+		}
+		isEmpty() {
+			return this.count === 0
+		}
+		static hashFunc(str, size) {
+			// 根据一个字符串 'passion' --> 6
+			const key = 41
+			let hashCode = 0
+			for (let i = 0; i < str.length; i++) {
+				hashCode = key * hashCode + str.charCodeAt(i)
+			}
+			return hashCode % size
+		}
+		static getPrime(num) {
+			if (HashTable.isPrime(num)) {
+				return num
+			}else {
+				while(!HashTable.isPrime(num)) {
+					num++
+				}
+				return num
+			}
+		}
+		static isPrime(num) {
+			if (num < 2) {
+				return false
+			}
+			if (num === 2) {
+				return true
+			}
+			for (let i = 2; i <= Math.sqrt(num); i++) {
+				if (num % i === 0) {
+					return false
+				}
+			}
+			return true
+		}
+	}
+	var ht = new HashTable()
+
+	// 2.插入数据
+	ht.put("asdfhfbc", "123")
+	ht.put("cbtrya", "321")
+	ht.put("ndsfewrba", "521")
+	ht.put("mscvxcba", "5201")
+	ht.put("qbwera", "5202")
+	ht.put("2hgfhtrba", "5203")
+	ht.put("3sadfgba", "5204")
+	ht.put("5kba", "5205")
+	ht.put("6re4fba", "5206")
+	ht.put("7u5bba", "5206")
+	ht.put("8snba", "5206")
+	ht.put("fdsba", "5206")
+	ht.put("fbadf", "5206")
+
+	// 3.获取数据
+	console.log(ht.get("abc"))
+	ht.put("abc", "111")
+	console.log(ht.get("abc"))
+
+	// 4.删除数据
+	console.log(ht.remove("abc"))
+	console.log(ht.get("abc"))
+
+	console.log(ht.storage)
+
+</script>
+</body>
+</html>

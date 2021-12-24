@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+	class Node {
+		constructor(data) {
+			this.data = data
+			this.prev = null
+			this.next = null
+		}
+
+	}
+	class DoubleLinkedList {
+		constructor() {
+			this.head = null
+			this.tail = null
+			this.length = 0
+		}
+		append(data) {
+			const node = new Node(data)
+			if (this.length === 0) {
+				this.head = node
+			}else {
+				this.tail.next = node
+				node.prev = this.tail
+			}
+			this.tail = node
+			this.length++
+		}
+		insert(position, data) {
+			if (position < 0 || position > this.length) {
+				return false
+			}
+			const node = new Node(data)
+			let current = this.head
+			if (position === 0) {
+				this.head = node
+				node.next = current
+				node.prev = this.head
+			}else {
+				let index = 0
+				while (index < (position - 1)) {
+					current = current.next
+					index++
+				}
+				let prev = current
+				let next = current.next
+				prev.next = node
+				node.next = next
+				if (position === this.length) {
+					this.tail = node
+				}
+			}
+			this.length++
+		}
+		removeAt(position) {
+			if (position < 0 || position >= this.length) {
+				return false
+			}
+			if (this.length === 0) {
+				return false
+			}
+			// 删除 第0个
+			if (position === 0) {
+				this.head = this.head.next
+				this.head.prev = null
+				return this.head.data
+			}
+
+			let current = this.head
+			let prev = null
+			let index = 0
+			while(index !== position) {
+				prev = current
+				current = current.next
+				index++
+			}
+			prev.next = current && current.next
+			// 如果 prev.next 存在  说明不是最后一个
+			// 如果 prev.next 不存在, 说明是最后一个, 则要修改 this.tail
+			if (prev.next) {
+				current.next.prev = prev
+			}else {
+				this.tail = prev
+			}
+			this.length -= 1
+			return current.data
+		}
+		remove(data) {
+			const index = this.indexOf(data)
+			console.log('index : ', index);
+			return this.removeAt(index)
+		}
+		update(position, data) {
+			if (position < 0 || position >= this.length) {
+				return false
+			}
+			let index = 0
+			let current = this.head
+			while (index++ < position) {
+				current = current.next
+			}
+			current.data = data
+		}
+		get(position) {
+			// 1. 越界判断
+			if (position < 0 || position >= this.length) {
+				return null
+			}
+			let index = 0
+			let current = this.head
+			while(index++ < position) {
+				current = current.next
+			}
+			return current.data
+		}
+		indexOf(data) {
+			if (this.length === 0) {
+				return -1
+			}
+			let index = -1
+			let current = this.head
+			while(current) {
+				index++
+				if (current.data === data) {
+					return index
+				}
+				current = current.next
+			}
+			return -1
+		}
+		isEmpty() {
+			return this.length === 0
+		}
+		size() {
+			return this.length
+		}
+		toString() {
+			let res = ''
+			let current = this.head
+			while(current) {
+				res += current.data + ' '
+				current = current.next
+			}
+			return res
+		}
+		// 依次向前 toString 拼接
+		forwardString() {
+			let res = ''
+			let current = this.tail
+			while(current) {
+				res += current.data
+				current = current.prev
+			}
+			return res
+		}
+
+		// 依次向后 toString 拼接
+		backwardString() {
+			let res = ''
+			let current = this.head
+			while(current) {
+				res += current.data
+				current = current.next
+			}
+			return res
+		}
+	}
+
+	const doubleLinkList = new DoubleLinkedList()
+	doubleLinkList.append('a')
+	doubleLinkList.append('b')
+	doubleLinkList.append('c')
+	doubleLinkList.append('d')
+	doubleLinkList.append('e')
+
+	console.log(doubleLinkList.toString());
+	console.log(doubleLinkList.backwardString());
+	console.log(doubleLinkList.forwardString());
+	console.log(doubleLinkList.remove('c'));
+	console.log(doubleLinkList.toString());
+	console.log(doubleLinkList.removeAt(1));
+	console.log(doubleLinkList.toString());
+	doubleLinkList.insert(1, 'insert')
+	console.log(doubleLinkList.toString());
+
+</script>
+</body>
+</html>
